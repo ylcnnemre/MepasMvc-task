@@ -3,7 +3,7 @@
 }
 <style>
     body {
-        background-color: #f1f1f1; /* Loş gri arka plan rengi */
+        background-color: #f1f1f1;
         height: 100vh;
     }
 
@@ -12,10 +12,11 @@
         justify-content: center;
         align-items: center;
         height : 100%;
+        flex-direction:column;
     }
 
     .custom-form {
-        background-color: #fff; /* Form arka plan rengi */
+        background-color: #fff; 
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -25,10 +26,10 @@
     }
 </style>
 
-<div class="container-form">
+<div class="container-form"  >
     <div class="custom-form">
         <h3 class="card-title text-center">Giriş Yap</h3>
-       
+           
             <div class="mb-3">
                 <label for="username" class="form-label">Kullanıcı Adı</label>
                 <input type="text" class="form-control" id="username" name="username" placeholder="Kullanıcı Adı">
@@ -40,6 +41,9 @@
             <button type="button" id="loginbtn"  class="btn btn-primary btn-block">Giriş Yap</button>
        
     </div>
+    <p style="font-size:15px;margin-top:15px;">
+        İlk yüklenirken excel'de username admin parola 12345 olarak tutuluyor
+    </p>
 </div>
 
 

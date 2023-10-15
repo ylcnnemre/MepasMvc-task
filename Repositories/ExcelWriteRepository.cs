@@ -11,7 +11,7 @@ namespace MepasTask.Repositories
 {
     public class ExcelWriteRepository: IExcelWriteRepository
     {
-        public bool IsExcelOpen()
+        public bool IsExcelOpen()  // Excelin  açık olup olmadığını kontrol eden metod
         {
             Process[] processes = Process.GetProcessesByName("EXCEL");
 
@@ -23,18 +23,16 @@ namespace MepasTask.Repositories
             
         }
 
-        public void CreateProductsWorkSheet()
+        public void CreateProductsWorkSheet()   // product worksheeti oluşturan metod
         {
             var filePath = "wwwroot/Veritabani.xlsx";
             FileInfo file = new FileInfo(filePath);
             using (var xlPackage = new ExcelPackage(file))
             {
-                // "Product" sayfasının mevcut olup olmadığını kontrol edin
                 var productWorksheet = xlPackage.Workbook.Worksheets.FirstOrDefault(w => w.Name == "Product");
 
                 if (productWorksheet == null)
                 {
-                    // "Product" sayfası yoksa oluşturun
                     productWorksheet = xlPackage.Workbook.Worksheets.Add("Product");
 
                     using (var r = productWorksheet.Cells["A1:N1"])
@@ -45,7 +43,7 @@ namespace MepasTask.Repositories
                         r.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(23, 55, 93));
                     }
 
-                    // "Product" sayfasına başlık satırlarını ekleyin
+                    // "Product" sayfasına başlık satırlarını ekle
                     productWorksheet.Cells["A1"].Value = "id";
                     productWorksheet.Cells["B1"].Value = "name";
                     productWorksheet.Cells["C1"].Value = "category_id";
@@ -100,16 +98,15 @@ namespace MepasTask.Repositories
 
                 xlPackage.Save();
             }
-        }
+        }   // user worksheetini oluşturan metod
 
 
-        public void CreateCategoryWorkSheet()
+        public void CreateCategoryWorkSheet()   // kategori worksheetini oluşturan metod
         {
             var filePath = "wwwroot/Veritabani.xlsx";
             FileInfo file = new FileInfo(filePath);
             using (var xlPackage = new ExcelPackage(file))
             {
-                // "User" sayfasının mevcut olup olmadığını kontrol edin
                 var userWorksheet = xlPackage.Workbook.Worksheets.FirstOrDefault(w => w.Name == "Categories");
                 
                 if (userWorksheet == null)
@@ -123,10 +120,6 @@ namespace MepasTask.Repositories
                         r.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(23, 55, 93));
                     }
 
-                    // "User" sayfası yoksa oluşturun
-                
-
-                    // "User" sayfasına başlık satırlarını ekleyin
                     userWorksheet.Cells["A1"].Value = "id";
                     userWorksheet.Cells["B1"].Value = "name";
 
@@ -138,42 +131,6 @@ namespace MepasTask.Repositories
             }
         }
 
-
-        public void AddProduct()
-        {
-            var filePath = "wwwroot/Veritabani.xlsx";
-
-            FileInfo file = new FileInfo(filePath);
-
-            using (var xlPackage = new ExcelPackage(file))
-            {
-                // "Product" sayfasını seçin
-                var productWorksheet = xlPackage.Workbook.Worksheets["Product"];
-                
-                if (productWorksheet != null)
-                {
-                    if(IsExcelOpen())
-                    {
-                        // Yeni bir satır eklemek için bir sonraki boş satırı bulun
-                        int newRow = productWorksheet.Dimension?.Rows + 1 ?? 2; // 2. satırdan başlamak (ilk satır başlık olduğu için)
-                        var cell = "A" + newRow.ToString();
-                        
-                        productWorksheet.Cells[cell].Value = "est";
-
-                        xlPackage.Save();
-                    }
-                    else
-                    {
-                        throw new Exception("exceli kapat");
-                    }
-                   
-                }
-                else
-                {
-                    throw new Exception("Eklerken bir hata oluştu");
-                }
-            }
-        }
 
         
     }

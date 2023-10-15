@@ -14,7 +14,7 @@ namespace MepasTask.Repositories
         }
 
 
-        public List<CategoryModel>? getAllCategories()
+        public List<CategoryModel>? getAllCategories()   // bütün kategoriler geitirmek için kullanılan metod
         {
             var filePath = "wwwroot/Veritabani.xlsx";
             FileInfo file = new FileInfo(filePath);
@@ -26,8 +26,6 @@ namespace MepasTask.Repositories
                 if (categorieWorksheet != null)
                 {
                     int rowCount = categorieWorksheet.Dimension.Rows;
-                    
-                    // İlk satır başlık olduğu için 2. satırdan başlayarak verileri alabilirsiniz
                     
                     for (int row = 2; row <= rowCount; row++)
                     {
@@ -59,7 +57,7 @@ namespace MepasTask.Repositories
 
             using (var xlPackage = new ExcelPackage(file))
             {
-                // "Product" sayfasını seçin
+             
                 var productWorksheet = xlPackage.Workbook.Worksheets["Categories"];
 
                 if (productWorksheet != null)
@@ -138,7 +136,7 @@ namespace MepasTask.Repositories
         }
 
 
-        public string findById(string categoryId )
+        public string findById(string categoryId )   // categoryId ye göre categorinin ismini getiren metod
         {
             var filePath = "wwwroot/Veritabani.xlsx";
             FileInfo file = new FileInfo(filePath);

@@ -38,8 +38,8 @@ namespace MepasTask.Repositories
                 {
                     if (excelWriteRepository.IsExcelOpen())
                     {
-                        // Yeni bir satır eklemek için bir sonraki boş satırı bulun
-                        int newRow = productWorksheet.Dimension?.Rows + 1 ?? 2; // 2. satırdan başlamak (ilk satır başlık olduğu için)
+                    
+                        int newRow = productWorksheet.Dimension?.Rows + 1 ?? 2; 
                         var cell = "A" + newRow.ToString();
 
                         productWorksheet.Cells[$"A{newRow.ToString()}"].Value = productModel.id;
@@ -86,7 +86,6 @@ namespace MepasTask.Repositories
                 {
                     int rowCount = productWorkSheet.Dimension.Rows;
 
-                    // İlk satır başlık olduğu için 2. satırdan başlayarak verileri alabilirsiniz
 
                     for (int row = 2; row <= rowCount; row++)
                     {

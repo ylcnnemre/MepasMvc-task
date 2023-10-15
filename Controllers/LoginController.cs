@@ -22,7 +22,7 @@ namespace MepasTask.Controllers
         public LoginController(IExcelWriteRepository excelWriteRepository,IUserRepository userRepository,ICategoryRepository categoryRepository)
         {
             this._userRepository = userRepository;
-                this._excelWriteRepository = excelWriteRepository;
+            this._excelWriteRepository = excelWriteRepository;
             this.categoryRepository= categoryRepository;    
         }
 
@@ -100,7 +100,6 @@ namespace MepasTask.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> loginConfirm([FromBody] LoginUserDto user)
         {
-            Console.WriteLine("code ===> ", user.code);
             if(user.code== 1111)
             {
                 var claims = new List<Claim>
@@ -116,7 +115,6 @@ namespace MepasTask.Controllers
 
                 return Ok(new
                 {
-               
                     msg = "Onay kodu doğru"
                 });
             }

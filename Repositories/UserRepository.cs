@@ -76,7 +76,6 @@ namespace MepasTask.Repositories
 
             using (var xlPackage = new ExcelPackage(file))
             {
-                // "User" sayfasının mevcut olup olmadığını kontrol edin
                 var userWorksheet = xlPackage.Workbook.Worksheets.FirstOrDefault(w => w.Name == "User");
 
                 if (userWorksheet == null)
