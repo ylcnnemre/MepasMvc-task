@@ -61,7 +61,6 @@
             },
             body: JSON.stringify(data)
         })
-
         if (response.ok) {
             const timerInterval = 100000; // 100 saniye
             Swal.fire({
@@ -76,6 +75,16 @@
                 showLoaderOnConfirm: true,
                 allowOutsideClick: () => !Swal.isLoading()
             }).then(val => {
+                console.log("valll ==>",val)
+                if (val.dismiss === Swal.DismissReason.timer) {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Süre Doldu',
+                        text: 'İşlem zaman aşımına uğradı.',
+                    });
+                }
+
+
                 if (val.isConfirmed) { 
                     fetch("/login/confirm", {
                         method: "POST",
@@ -115,6 +124,14 @@
 
         }
 
+        else{
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Kullanıcı adı veya parola hatalı',
+            })
+
+        }
     }
     )
 

@@ -7,12 +7,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped<IExcelWriteRepository, ExcelWriteRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();   
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<IUtil, Util>();
-
+builder.Services.AddPersistenceService();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddMvc(config =>
