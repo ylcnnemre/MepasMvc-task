@@ -1,0 +1,142 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model List<MepasTask.Models.CategoryModel>
+
+<section class="container" style="padding-top:100px;">
+    <div style="margin-bottom:40px;">
+        <h3 class="text-primary">
+            Ürün Ekle
+        </h3>
+    </div>
+
+        <div class="row gy-5 gx-5">
+            <div class="col-md-4">
+                <label for="productName" class="form-label">Ürün ismi</label>
+                <input type="text" class="form-control" id="productName" name="name"  placeholder="Ürün ismi">
+            </div>
+            <div class="col-md-4">
+                <label for="category" class="form-label">Kategori</label>
+            <select class="form-select" aria-label="Default select example" id="mySelect">
+                <option selected>Kategori Seçiniz</option>
+                @foreach(var item in Model)
+                {
+                    <option value="@item.name"> @item.name </option>
+                }
+              
+              
+            </select>
+            </div>
+            <div class="col-md-4">
+                <label for="price" class="form-label">Fiyat</label>
+                <input type="text" class="form-control" id="price" name="price"  placeholder="fiyat">
+            </div>
+            <div class="col-md-4">
+                <label for="unit" class="form-label">Birim</label>
+                <input type="text" class="form-control" id="unit" name="unit" placeholder="birim">
+            </div>
+            <div class="col-md-4">
+                <label for="stock" class="form-label">Stok</label>
+                <input type="text" class="form-control" id="stock" name="stock" placeholder="stok">
+            </div>
+            <div class="col-md-4">
+                <label for="color" class="form-label">Renk</label>
+                <input type="text" class="form-control" id="color" name="color"  placeholder="renk">
+            </div>
+            <div class="col-md-4">
+                <label for="weight" class="form-label">Ağırlık</label>
+            <input type="text" class="form-control" id="weight" name="weight" placeholder="ağırlık">
+            </div>
+            <div class="col-md-4">
+                <label for="width" class="form-label">En</label>
+                <input type="text" class="form-control" id="width" name="width" placeholder="en">
+            </div>
+            <div class="col-md-4">
+                <label for="height" class="form-label">Boy</label>
+                <input type="text" class="form-control" id="height" name="height" placeholder="boy">
+            </div>
+        </div>
+        <div style="display:flex; justify-content:flex-end;margin-top:50px;" >
+            <button class="btn btn-primary" id="submitBtn" >
+                Ekle
+            </button>
+        </div>
+       
+
+    
+
+</section>
+
+
+
+<script>
+
+    let data = {}
+    var allOptionValues = $('#mySelect').find('option').map(function () {
+        return $(this).val();
+    }).get();
+    data["category"] = allOptionValues[1]
+    $('#mySelect').on('change', function () {
+        var selectedValue = $(this).val();
+
+        data["category"] = selectedValue;
+    });
+
+    $('#mySelect').on('change', function () {
+        var selectedValue = $(this).val();
+
+        data["category"] = selectedValue;
+    });
+
+    $("#submitBtn").click(async function () {
+    
+        data["name"] = $("#productName").val()
+        data["price"] = $("#price").val()
+        data["unit"] = $("#unit").val();
+        data["stock"] = $("#stock").val();
+        data["color"] = $("#color").val();
+        data["weight"] = $("#weight").val();
+        data["width"] = $("#width").val();
+        data["height"] = $("#height").val();
+        
+        console.log("data ==>",data)
+        let response = await fetch("/addproduct",{
+            method : "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body : JSON.stringify(data)
+        })
+        let responseData = await response.json();
+        if (response.ok) {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Ekleme işlemi tamamlandı',
+                showConfirmButton: false,
+                timer: 1000
+            })
+
+            $("#productName").val("")
+            $("#productName").val("")
+            $("#price").val("")
+            $("#unit").val("");
+             $("#stock").val("");
+            $("#color").val("");
+          $("#weight").val("");
+             $("#width").val("");
+             $("#height").val("");
+        }
+        else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: responseData.msg
+       
+            })
+        }
+    })
+
+
+</script>

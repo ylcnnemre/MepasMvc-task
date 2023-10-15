@@ -1,0 +1,136 @@
+﻿@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model MepasTask.Dto.ProductResponseDto
+
+
+<section class="container" style="padding-top:100px;">
+
+    @if(Model==null)
+    {
+        <h3>
+            Aradığınız kayıt bulunamadı
+        </h3>
+    }
+    else
+    {
+        <div style="margin-bottom:40px;">
+            <h3 class="text-primary">
+                Ürün Güncelle
+            </h3>
+        </div>
+
+        <div class="row gy-5 gx-5" itemid="@Model.id">
+            <div class="col-md-4">
+                <label for="productName" class="form-label">Ürün ismi</label>
+                <input type="text" class="form-control" id="productName" name="name" value="@Model.name" placeholder="Ürün ismi">
+            </div>
+            <div class="col-md-4">
+                <label for="category" class="form-label">Kategori</label>
+                <select class="form-select" aria-label="Default select example" id="mySelect" selectedVal="@Model.categoryName">
+
+                    @foreach (var item in Model.categories)
+                    {
+                        <option @(item.name == Model.categoryName ? "selected" : "") value="@item.name"> @item.name </option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="price" class="form-label">Fiyat</label>
+                <input type="text" value="@Model.price" class="form-control" id="price" name="price" placeholder="fiyat">
+            </div>
+            <div class="col-md-4">
+                <label for="unit" class="form-label">Birim</label>
+                <input type="text" class="form-control" id="unit" value="@Model.unit" name="unit" placeholder="birim">
+            </div>
+            <div class="col-md-4">
+                <label for="stock" class="form-label">Stok</label>
+                <input type="text" class="form-control" id="stock" name="stock" value="@Model.stock" placeholder="stok">
+            </div>
+            <div class="col-md-4">
+                <label for="color" class="form-label">Renk</label>
+                <input type="text" class="form-control" id="color" name="color" placeholder="renk" value="@Model.color">
+            </div>
+            <div class="col-md-4">
+                <label for="weight" class="form-label">Ağırlık</label>
+                <input type="text" class="form-control" id="weight" name="weight" placeholder="ağırlık" value="@Model.weight">
+            </div>
+            <div class="col-md-4">
+                <label for="width" class="form-label">En</label>
+                <input type="text" class="form-control" id="width" name="width" placeholder="en" value="@Model.width">
+            </div>
+            <div class="col-md-4">
+                <label for="height" class="form-label">Boy</label>
+                <input type="text" class="form-control" id="height" name="height" placeholder="boy" value="@Model.height">
+            </div>
+        </div>
+        <div style="display:flex; justify-content:flex-end;margin-top:50px;" id="editButton">
+            <button class="btn btn-primary" id="submitBtn">
+                Güncelle
+            </button>
+        </div>
+    }
+   
+
+</section>
+
+
+
+<script>
+    let data = {}
+
+    let category =$("#mySelect").attr("selectedVal")
+    data["category"] = category;
+    $('#mySelect').on('change', function () {
+        var selectedValue = $(this).val();
+
+        data["category"] = selectedValue;
+    });
+
+    $("#editButton").click(async function () {
+
+        var itemId = $(".row").attr("itemid");
+
+
+        data["id"] = itemId;
+        data["name"] = $("#productName").val()
+        data["price"] = $("#price").val()
+        data["unit"] = $("#unit").val();
+        data["stock"] = $("#stock").val();
+        data["color"] = $("#color").val();
+        data["weight"] = $("#weight").val();
+        data["width"] = $("#width").val();
+        data["height"] = $("#height").val();
+
+        let response = await fetch("/updateproduct", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        let responseData = await response.json();
+        console.log("res ??>",responseData)
+        if (response.ok) {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Güncelleme işlemi tamamlandı',
+                showConfirmButton: false,
+                timer: 1000
+            })
+        }
+        else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: responseData.msg
+
+            })
+        }
+    })
+
+
+
+</script>

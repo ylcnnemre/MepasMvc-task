@@ -1,0 +1,125 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model List<MepasTask.Dto.ProductResponseDto>
+<style>
+       .product_wrapper{
+           display : flex;
+           flex-direction : column;
+           padding-top : 50px;
+       }
+       .top_menu{
+           display : flex;
+           justify-content : space-between;
+           margin-bottom : 30px;
+       }
+</style>
+
+
+<section class="container" style="padding-top:100px;" >
+        
+    <div class="product_wrapper" >
+        <div class="top_menu">
+            <h4>
+                Ürün Listesi
+            </h4>
+            <a  class="btn btn-primary" href="/addproduct"   >
+                Ürün Ekle
+            </a>
+        </div>
+       
+        <div>
+            <table class="table table-striped table-bordered">
+                <thead >
+                    <tr>
+                        <th scope="col">İsim</th>
+                        <th scope="col">Kategori</th>
+                        <th scope="col">Fiyat</th>
+                        <th scope="col">Birim</th>
+                         <th scope="col">Stok</th>
+                        <th scope="col">Renk</th>
+                        <th scope="col">Ağırlık</th>
+                          <th scope="col">Genişlik</th>
+                          <th scope="col">Yükseklik</th>
+                          <th scope="col">Oluşturma Tarihi</th>
+                          <th scope="col">Güncelleme Tarihi</th>
+                          <th scope="col">Düzenle</th>
+                          <th scope="col">Sil</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model)
+                    {
+                        <tr data-id="@item.id" >
+                            <th scope="row">@item.name</th>
+                            <td>@item.categoryName</td>
+                            <td>@item.price</td>
+                            <td>@item.unit</td>
+                            <td>@item.stock</td>
+                            <td>@item.color </td>
+                            <td>@item.weight</td>
+                            <td>@item.width</td>
+                            <td>@item.height</td>
+                            <td>@item.created_date</td>
+                            <td>@item.updated_date</td>
+                            <td>
+                                <a class="btn btn-primary" href="/editproduct/@item.id" >
+                                    Düzenle
+                                </a>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger delete-button "   >
+                                    Sil
+                                </button>
+                            </td>
+                        </tr>
+                    }
+               
+                 
+                </tbody>
+            </table>
+
+        </div>
+       
+    </div>
+
+</section>
+
+
+<script>
+
+    $(".delete-button").click(async function () {
+        var row = $(this).closest('tr');
+        var id = row.data('id'); 
+
+       let response = await fetch(`/deleteProduct/${id}`, {
+            method : "DELETE"
+        })
+        let responseData = await response.json();
+    
+        if (response.ok) {
+            row.remove();
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Silme işlemi tamamlandı',
+                showConfirmButton: false,
+                timer: 1500
+            })
+
+           
+
+        }
+        else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: responseData.msg
+
+            })
+        }
+    });
+
+
+</script>

@@ -1,0 +1,119 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    body {
+        background-color: #f1f1f1; /* Loş gri arka plan rengi */
+        height: 100vh;
+    }
+
+    .container-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height : 100%;
+    }
+
+    .custom-form {
+        background-color: #fff; /* Form arka plan rengi */
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        height : max-content;
+        width: 100%;
+    }
+</style>
+
+<div class="container-form">
+    <div class="custom-form">
+        <h3 class="card-title text-center">Giriş Yap</h3>
+       
+            <div class="mb-3">
+                <label for="username" class="form-label">Kullanıcı Adı</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Kullanıcı Adı">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Şifre</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Şifre">
+            </div>
+            <button type="button" id="loginbtn"  class="btn btn-primary btn-block">Giriş Yap</button>
+       
+    </div>
+</div>
+
+
+
+<script>
+    $("#loginbtn").click(async function () {
+        const data = {};
+        data["username"] = $("#username").val();
+        data["password"] = $("#password").val();
+        console.log(data["username"])
+        let response = await fetch("/login", {
+            method: "POST",
+           headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+
+        if (response.ok) {
+            const timerInterval = 100000; // 100 saniye
+            Swal.fire({
+                title: 'Onay Kodu',
+                input: 'text',
+                timer : timerInterval,
+                inputAttributes: {
+                    autocapitalize: 'off'
+                },
+                timerProgressBar: true,
+                confirmButtonText: 'Onayla',
+                showLoaderOnConfirm: true,
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then(val => {
+                if (val.isConfirmed) { 
+                    fetch("/login/confirm", {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            ...data,
+                            code: val.value
+                        })
+                    }).then(async (val) => {
+                        console.log("valll ==>", val)
+                        if (val.ok) {
+                            window.location.href = "/"
+                        }
+                        else {
+
+                            Swal.fire({
+                                toast: true,
+                                icon: 'error',
+                                title: 'Hata...',
+                                text: 'Onay Kodu Yanlış',
+                               
+                            })
+
+
+
+                        }
+                    }).catch(err => {
+                        Swal.showValidationMessage(
+                            `Request failed: ${error}`
+                        )
+                    })
+                
+                }
+            })
+
+        }
+
+    }
+    )
+
+
+
+</script>
