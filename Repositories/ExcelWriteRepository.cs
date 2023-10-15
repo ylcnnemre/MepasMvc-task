@@ -6,21 +6,22 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using MepasTask.Abstract;
 using MepasTask.Models;
+using System;
+using System.IO.Abstractions;
+
 
 namespace MepasTask.Repositories
 {
     public class ExcelWriteRepository: IExcelWriteRepository
     {
-        public bool IsExcelOpen()  // Excelin  açık olup olmadığını kontrol eden metod
+        private readonly IUserRepository userRepository;
+        private readonly ICategoryRepository categoryRepository;    
+        public ExcelWriteRepository(IUserRepository userRepository,ICategoryRepository categoryRepository)
         {
-            Process[] processes = Process.GetProcessesByName("EXCEL");
 
-            if(processes.Length == 0 )
-            {
-                return true;
-            }
-            return false;
-            
+            this.userRepository = userRepository;
+            this.categoryRepository = categoryRepository;
+
         }
 
         public void CreateProductsWorkSheet()   // product worksheeti oluşturan metod
@@ -132,6 +133,38 @@ namespace MepasTask.Repositories
         }
 
 
+        public void CreateAllWorkSheets()
+        {
+            var fileSystem = new FileSystem();
+            string filePath = "wwwroot/Veritabani.xlsx";
+            if (!fileSystem.File.Exists(filePath))
+            {
+               CreateProductsWorkSheet();
+               CreateUsersWorkSheet();
+               CreateCategoryWorkSheet();
+
+                userRepository.addUser(new UserModel()
+                {
+                    id = Guid.NewGuid().ToString(),
+                    name = "admin",
+                    surname = "admin",
+                    username = "admin",
+                    password = "12345",
+                    status = "true"
+                });
+
+                categoryRepository.addCategory(new CategoryModel()
+                {
+                    id = Guid.NewGuid().ToString(),
+                    name = "Kıyafet"
+                });
+                categoryRepository.addCategory(new CategoryModel()
+                {
+                    id = Guid.NewGuid().ToString(),
+                    name = "Elektronik"
+                });
+            }
+        }
         
     }
 }

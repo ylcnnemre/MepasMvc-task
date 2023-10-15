@@ -16,14 +16,15 @@ namespace MepasTask.Controllers
     [Route("login")]
     public class LoginController : Controller
     {
-        private readonly IExcelWriteRepository _excelWriteRepository;
+
         private readonly IUserRepository _userRepository;
-        private readonly ICategoryRepository categoryRepository;
-        public LoginController(IExcelWriteRepository excelWriteRepository,IUserRepository userRepository,ICategoryRepository categoryRepository)
+        private readonly IExcelWriteRepository excelWriteRepository;
+
+        public LoginController(IUserRepository userRepository, IExcelWriteRepository excelWriteRepository)
         {
             this._userRepository = userRepository;
-            this._excelWriteRepository = excelWriteRepository;
-            this.categoryRepository= categoryRepository;    
+            this.excelWriteRepository= excelWriteRepository;
+ 
         }
 
 
@@ -31,36 +32,8 @@ namespace MepasTask.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var fileSystem = new FileSystem();
-            string filePath = "wwwroot/Veritabani.xlsx";
 
-            if (!fileSystem.File.Exists(filePath))
-            {
-                _excelWriteRepository.CreateProductsWorkSheet();
-                _excelWriteRepository.CreateUsersWorkSheet();
-                _excelWriteRepository.CreateCategoryWorkSheet();
-           
-                _userRepository.addUser(new UserModel()
-                {
-                    id = Guid.NewGuid().ToString(),
-                name = "admin",
-                    surname = "admin",
-                    username = "admin",
-                    password = "12345",
-                    status = "true"
-                });
-
-                categoryRepository.addCategory(new CategoryModel()
-                {
-                    id = Guid.NewGuid().ToString(),
-                    name = "Kıyafet"
-                });
-                categoryRepository.addCategory(new CategoryModel()
-                {
-                    id = Guid.NewGuid().ToString(),
-                    name = "Elektronik"
-                });
-            }
+            excelWriteRepository.CreateAllWorkSheets();
          
             if (User.Identity.IsAuthenticated)
             {

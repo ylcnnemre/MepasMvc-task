@@ -6,16 +6,16 @@ namespace MepasTask.Repositories
 {
     public class CategoryRepository:ICategoryRepository
     {
-        private readonly IExcelWriteRepository excelWriteRepository;
-
-        public CategoryRepository(IExcelWriteRepository excelWriteRepository)
+        private readonly IUtil util;
+        public CategoryRepository(IUtil util)
         {
-                this.excelWriteRepository = excelWriteRepository;
+                this.util = util;
         }
 
 
         public List<CategoryModel>? getAllCategories()   // bütün kategoriler geitirmek için kullanılan metod
         {
+           
             var filePath = "wwwroot/Veritabani.xlsx";
             FileInfo file = new FileInfo(filePath);
             using (var xlPackage = new ExcelPackage(file))
@@ -62,7 +62,7 @@ namespace MepasTask.Repositories
 
                 if (productWorksheet != null)
                 {
-                    if (excelWriteRepository.IsExcelOpen())
+                    if (util.IsExcelOpen())
                     {
                        
                         int newRow = productWorksheet.Dimension?.Rows + 1 ?? 2; 

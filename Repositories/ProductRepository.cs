@@ -9,13 +9,12 @@ namespace MepasTask.Repositories
 {
     public class ProductRepository:IProductRepository
     {
-        private readonly IExcelWriteRepository excelWriteRepository;
         private readonly ICategoryRepository categoryRepository;
-
-        public ProductRepository(IExcelWriteRepository excelWriteRepository, ICategoryRepository categoryRepository)
+        private readonly IUtil util;
+        public ProductRepository(ICategoryRepository categoryRepository, IUtil util)
         {
-            this.excelWriteRepository = excelWriteRepository;
             this.categoryRepository = categoryRepository;
+            this.util = util;   
         }
 
         public void AddProduct(ProductModel productModel)
@@ -24,7 +23,7 @@ namespace MepasTask.Repositories
 
             FileInfo file = new FileInfo(filePath);
 
-            if(!excelWriteRepository.IsExcelOpen())
+            if(!util.IsExcelOpen())
             {
                 throw new Exception("Bu işlemin yapılabilmesi için excelin kapatılması gerekiyor");
             }
@@ -36,8 +35,7 @@ namespace MepasTask.Repositories
 
                 if (productWorksheet != null)
                 {
-                    if (excelWriteRepository.IsExcelOpen())
-                    {
+                   
                     
                         int newRow = productWorksheet.Dimension?.Rows + 1 ?? 2; 
                         var cell = "A" + newRow.ToString();
@@ -57,11 +55,8 @@ namespace MepasTask.Repositories
                         productWorksheet.Cells[$"M{newRow.ToString()}"].Value = productModel.created_date;
                         productWorksheet.Cells[$"N{newRow.ToString()}"].Value = productModel.updated_date;
                         xlPackage.Save();
-                    }
-                    else
-                    {
-                        throw new Exception("exceli kapat");
-                    }
+                    
+                   
 
                 }
                 else
@@ -130,7 +125,7 @@ namespace MepasTask.Repositories
 
         public bool deleteProduct(string productId)
         {
-            if(!excelWriteRepository.IsExcelOpen())
+            if(!util.IsExcelOpen())
             {
                 Console.WriteLine("excelll");
                 throw new Exception("bu işlemin yapılabilmesi için excelin kapatılması gerekiyor");
@@ -253,7 +248,7 @@ namespace MepasTask.Repositories
 
         public bool updateProduct(ProductDto productDtoModel)
         {
-            if(!excelWriteRepository.IsExcelOpen())
+            if(!util.IsExcelOpen())
             {
 
                 throw new Exception("Bu işlemin yapılması için excelin kapatılması gerekli");

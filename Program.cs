@@ -1,15 +1,18 @@
 using MepasTask.Abstract;
 using MepasTask.Repositories;
+using MepasTask.Utils;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddTransient<IExcelWriteRepository, ExcelWriteRepository>();
-builder.Services.AddTransient<IUserRepository, UserRepository>();   
-builder.Services.AddTransient<IProductRepository, ProductRepository>();
-builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IExcelWriteRepository, ExcelWriteRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();   
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IUtil, Util>();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddMvc(config =>

@@ -6,11 +6,11 @@ namespace MepasTask.Repositories
 {
     public class UserRepository:IUserRepository
     {
-        private readonly IExcelWriteRepository excelWriteRepository;
 
-        public UserRepository(IExcelWriteRepository excelWriteRepository)
+        private readonly IUtil util;
+        public UserRepository(IUtil util)
         {
-            this.excelWriteRepository = excelWriteRepository;
+            this.util = util;   
         }
 
         public UserModel? findByUsername(string username)
@@ -78,13 +78,7 @@ namespace MepasTask.Repositories
             {
                 var userWorksheet = xlPackage.Workbook.Worksheets.FirstOrDefault(w => w.Name == "User");
 
-                if (userWorksheet == null)
-                {
-                    excelWriteRepository.CreateUsersWorkSheet();
-           
-                }
-
-                if (excelWriteRepository.IsExcelOpen())
+                if (util.IsExcelOpen())
                 {
                     var newRow = userWorksheet.Cells[userWorksheet.Dimension.End.Row + 1, 1];
 
